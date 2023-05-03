@@ -7,6 +7,7 @@ const bodyParser = require("body-parser");
 // endpoints
 const getCurrentControlList = require("./endpoints/student/currentControlList");
 const login = require("./endpoints/login");
+const getSessionList = require("./endpoints/student/sessionList");
 
 // base settings
 const PORT = process.env.PORT || 3001;
@@ -40,3 +41,5 @@ app.get("/", (_, res) => {
 app.post("/login", login);
 
 app.get("/student/control", getCurrentControlList);
+
+app.get("/student/session", getSessionList);
