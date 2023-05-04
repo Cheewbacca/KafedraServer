@@ -17,6 +17,8 @@ const getCurrentControlList = (req, res) => {
 
       const data = results;
 
+      pool.releaseConnection(connection);
+
       if (!data) {
         return res.status(403).send({ message: "Invalid data" });
       }

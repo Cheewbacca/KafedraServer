@@ -24,6 +24,8 @@ const getSessionsGroup = (req, res) => {
 
           const data = result;
 
+          pool.releaseConnection(connection);
+
           if (!data) {
             return res.status(403).send({ message: "Something went wrong" });
           }

@@ -2,9 +2,9 @@ const pool = require("../../mysql");
 const getPermissions = require("../helpers/getRights");
 
 const controlEdit = (req, res) => {
-  const { score, id_math, educator_id } = req.query || {};
+  const { score, id_math, educator_id, resource } = req.query || {};
 
-  if (!educator_id || !score || !id_math) {
+  if (!educator_id || !score || !id_math || !resource) {
     return res.status(403).send(new Error("Some field is missing"));
   }
 
@@ -14,14 +14,14 @@ const controlEdit = (req, res) => {
     return res.status(400).send(new Error("Wrong score"));
   }
 
-  getPermissions("can_edit", educator_id)
+  getPermissions("can_edit", educator_id, resource)
     .then((canView) => {
       if (!canView) {
         return res.status(403).send({ message: "Invalid permissions" });
       }
 
       pool.getConnection(function (err, connection) {
-        const sql = `UPDATE math_score SET score = ${score} WHERE ID_math_score = ${id_math};`;
+        const sql = `UPDATE ${resource} SET score = ${score} WHERE ID_math_score = ${id_math};`;
 
         connection.query(sql, function (error, result) {
           if (error) {
@@ -30,14 +30,14 @@ const controlEdit = (req, res) => {
 
           const { changedRows } = result;
 
+          pool.releaseConnection(connection);
+
           if (Boolean(changedRows)) {
             return res.status(200).send({ success: true });
           }
 
           return res.status(500).send({ message: "Something was bad" });
         });
-
-        pool.releaseConnection(connection);
       });
     })
     .catch((err) => {

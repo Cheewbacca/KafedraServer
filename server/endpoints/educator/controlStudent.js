@@ -1,14 +1,14 @@
 const pool = require("../../mysql");
 
 const controlStudent = (req, res) => {
-  const { id } = req.query || {};
+  const { id, resource } = req.query || {};
 
-  if (!id) {
+  if (!id || !resource) {
     return res.status(403).send(new Error("Some field is missing"));
   }
 
   pool.getConnection(function (err, connection) {
-    const sql = `Select ID_math_score, CONCAT(students.student_name, ' ', students.student_surname) AS student_name_surname, score_date, score,type_of_control from math_score inner join students on students.ID_student = math_score.student_id where student_id = ${id};`;
+    const sql = `Select ID_math_score, CONCAT(students.student_name, ' ', students.student_surname) AS student_name_surname, DATE_FORMAT(score_date, "%Y %m %d") as score_date, score,type_of_control from ${resource} inner join students on students.ID_student = ${resource}.student_id where student_id = ${id};`;
 
     connection.query(sql, function (error, results) {
       if (error) {
@@ -16,6 +16,8 @@ const controlStudent = (req, res) => {
       }
 
       const data = results;
+
+      pool.releaseConnection(connection);
 
       if (!data) {
         return res.status(403).send({ message: "Invalid data" });
