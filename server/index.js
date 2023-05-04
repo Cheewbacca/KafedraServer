@@ -48,11 +48,6 @@ app.use(cors());
 
 app.use(express.static(path.resolve(__dirname, "../../html")));
 
-// get front
-app.get("/", (_, res) => {
-  res.sendFile(path.resolve(__dirname, "../../html", "index.html"));
-});
-
 // API
 app.post("/login", login);
 
@@ -87,3 +82,8 @@ app.get("/educator/calendarList", getCalendarList);
 app.get("/educator/calendarDetailed", getCalendarDetailed);
 
 app.put("/educator/updateCalendar", updateCalendar);
+
+// get front
+app.get("*", (_, res) => {
+  res.sendFile(path.resolve(__dirname, "../../html", "index.html"));
+});
