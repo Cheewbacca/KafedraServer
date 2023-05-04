@@ -46,7 +46,7 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
-app.use(express.static(path.resolve(__dirname, "../../html")));
+app.use(express.static(path.resolve(__dirname, "../../front/build")));
 
 // API
 app.post("/login", login);
@@ -85,5 +85,5 @@ app.put("/educator/updateCalendar", updateCalendar);
 
 // get front
 app.get("*", (_, res) => {
-  res.sendFile(path.resolve(__dirname, "../../html", "index.html"));
+  res.sendFile(path.resolve(__dirname, "../../front/build", "index.html"));
 });
