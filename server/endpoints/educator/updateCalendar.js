@@ -2,9 +2,9 @@ const pool = require("../../mysql");
 const getPermissions = require("../helpers/getRights");
 
 const updateCalendar = (req, res) => {
-  const { note, control_id, educator_id } = req.query || {};
+  const { note1, note2, control_id, educator_id } = req.query || {};
 
-  if (!educator_id || !note || !control_id) {
+  if (!educator_id || !note1 || !control_id || !note2) {
     return res.status(403).send(new Error("Some field is missing"));
   }
 
@@ -15,7 +15,11 @@ const updateCalendar = (req, res) => {
       }
 
       pool.getConnection(function (err, connection) {
-        const sql = `UPDATE calendar_control SET calendar_control_1 = '${note}' WHERE ID_control = ${control_id};`;
+        const sql = `UPDATE calendar_control SET calendar_control_1 = ${decodeURI(
+          note1
+        )}, calendar_control_2 = ${decodeURI(
+          note2
+        )} WHERE ID_control = ${control_id};`;
 
         connection.query(sql, function (error, result) {
           if (error) {
@@ -24,14 +28,14 @@ const updateCalendar = (req, res) => {
 
           const { changedRows } = result;
 
+          pool.releaseConnection(connection);
+
           if (Boolean(changedRows)) {
             return res.status(200).send({ success: true });
           }
 
           return res.status(500).send({ message: "Something was bad" });
         });
-
-        pool.releaseConnection(connection);
       });
     })
     .catch((err) => {

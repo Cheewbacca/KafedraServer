@@ -24,14 +24,14 @@ const getCalendarDetailed = (req, res) => {
 
           const data = result;
 
+          pool.releaseConnection(connection);
+
           if (!data) {
             return res.status(403).send({ message: "Invalid data" });
           }
 
           return res.status(200).send({ data });
         });
-
-        pool.releaseConnection(connection);
       });
     })
     .catch((err) => {

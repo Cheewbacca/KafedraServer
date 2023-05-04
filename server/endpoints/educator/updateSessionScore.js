@@ -30,14 +30,14 @@ const updateSessionScore = (req, res) => {
 
           const { changedRows } = result;
 
+          pool.releaseConnection(connection);
+
           if (Boolean(changedRows)) {
             return res.status(200).send({ success: true });
           }
 
           return res.status(500).send({ message: "Something was bad" });
         });
-
-        pool.releaseConnection(connection);
       });
     })
     .catch((err) => {

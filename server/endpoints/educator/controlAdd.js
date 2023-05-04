@@ -9,6 +9,7 @@ const controlAdd = (req, res) => {
     type_of_control,
     educator_id,
     subject_id,
+    resource,
   } = req.body || {};
 
   if (
@@ -17,9 +18,10 @@ const controlAdd = (req, res) => {
     !score ||
     !type_of_control ||
     !educator_id ||
-    !subject_id
+    !subject_id ||
+    !resource
   ) {
-    return res.status(403).send(new Error("Some field is missing"));
+    return res.status(403).send({ message: "Some field is missing" });
   }
 
   const intScore = +score;
@@ -28,14 +30,14 @@ const controlAdd = (req, res) => {
     return res.status(400).send(new Error("Wrong score"));
   }
 
-  getPermissions("can_add", educator_id)
+  getPermissions("can_add", educator_id, resource)
     .then((canView) => {
       if (!canView) {
         return res.status(403).send({ message: "Invalid permissions" });
       }
 
       pool.getConnection(function (err, connection) {
-        const sql = `INSERT INTO math_score (student_id, score_date, score, type_of_control, educator_id, subject_id) VALUES (${student_id}, "${score_date}", ${score}, "${type_of_control}", ${educator_id}, ${subject_id});`;
+        const sql = `INSERT INTO ${resource} (student_id, score_date, score, type_of_control, educator_id, subject_id) VALUES (${student_id}, "${score_date}", ${score}, "${type_of_control}", ${educator_id}, ${subject_id});`;
 
         connection.query(sql, function (error, result) {
           if (error) {
@@ -44,14 +46,14 @@ const controlAdd = (req, res) => {
 
           const { affectedRows } = result;
 
+          pool.releaseConnection(connection);
+
           if (Boolean(affectedRows)) {
             return res.status(200).send({ success: true });
           }
 
           return res.status(500).send({ data });
         });
-
-        pool.releaseConnection(connection);
       });
     })
     .catch((err) => {

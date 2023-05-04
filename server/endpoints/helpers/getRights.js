@@ -15,6 +15,8 @@ const getPermissions = (field, id, resource = "math_score") => {
           return reject(error);
         }
 
+        pool.releaseConnection(connection);
+
         const [rights] = permissions;
 
         canView = Boolean(rights[field]);
