@@ -1,5 +1,4 @@
 // libraries
-const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -44,11 +43,6 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors());
-
-// get front
-app.get("/", (_, res) => {
-  res.sendFile(path.resolve(__dirname, "../front/build", "index.html"));
-});
 
 // API
 app.post("/login", login);
