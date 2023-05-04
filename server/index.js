@@ -1,4 +1,5 @@
 // libraries
+const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
@@ -22,7 +23,7 @@ const getCalendarDetailed = require("./endpoints/educator/getCalendarDetailed");
 const updateCalendar = require("./endpoints/educator/updateCalendar");
 
 // base settings
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 80;
 
 const app = express();
 
@@ -44,6 +45,11 @@ app.use(bodyParser.urlencoded({ extended: false }));
 app.use(bodyParser.json());
 
 app.use(cors());
+
+// get front
+app.get("/", (_, res) => {
+  res.sendFile(path.resolve(__dirname, "../../html", "index.html"));
+});
 
 // API
 app.post("/login", login);
