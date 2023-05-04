@@ -46,6 +46,8 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
+app.use(express.static(path.resolve(__dirname, "../../html")));
+
 // get front
 app.get("/", (_, res) => {
   res.sendFile(path.resolve(__dirname, "../../html", "index.html"));
