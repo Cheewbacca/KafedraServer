@@ -99,8 +99,8 @@ app.post("/fileUpload", uploadFile);
 app.get("/files", getFiles);
 
 // get front
-app.get("/server/uploads/*", (req, res) => {
-  res.sendFile(path.resolve(req.originalUrl));
+app.get("/uploads/*", (req, res) => {
+  res.sendFile(path.resolve(req.originalUrl.resolve("/")));
 });
 
 // get front
