@@ -97,8 +97,8 @@ app.put("/educator/updateCalendar", updateCalendar);
 // files
 app.post("/fileUpload", uploadFile);
 app.get("/files", getFiles);
+app.get("/allFiles", getAllFiles);
 
-// get front
 app.get("/uploads/*", (req, res) => {
   res.sendFile(path.resolve(req.originalUrl.replace("/", "")));
 });
