@@ -100,7 +100,7 @@ app.get("/files", getFiles);
 
 // get front
 app.get("/uploads/*", (req, res) => {
-  res.sendFile(path.resolve(req.originalUrl.resolve("/")));
+  res.sendFile(path.resolve(req.originalUrl.replace("/", "")));
 });
 
 // get front
