@@ -24,6 +24,8 @@ const getCalendarDetailed = require("./endpoints/educator/getCalendarDetailed");
 const updateCalendar = require("./endpoints/educator/updateCalendar");
 const uploadFile = require("./endpoints/uploadFile");
 const getFiles = require("./endpoints/getFiles");
+const getAllFiles = require("./endpoints/getAllFiles");
+const deleteFile = require("./endpoints/deleteFile");
 
 // base settings
 const PORT = process.env.PORT || 80;
@@ -97,8 +99,9 @@ app.put("/educator/updateCalendar", updateCalendar);
 // files
 app.post("/fileUpload", uploadFile);
 app.get("/files", getFiles);
+app.get("/allFiles", getAllFiles);
+app.delete("/deleteFile", deleteFile);
 
-// get front
 app.get("/uploads/*", (req, res) => {
   res.sendFile(path.resolve(req.originalUrl.replace("/", "")));
 });
