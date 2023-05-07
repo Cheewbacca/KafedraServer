@@ -58,7 +58,7 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
-app.use(express.static(path.resolve(__dirname, "/uploads")));
+app.use(express.static(path.resolve(__dirname, "../uploads")));
 app.use(express.static(path.resolve(__dirname, "../../front/build")));
 
 // API
