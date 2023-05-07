@@ -11,7 +11,7 @@ const uploadFile = async (req, res) => {
       const image = req.files.img;
       const { role, name } = req.body;
 
-      image.mv("uploads/" + image.name);
+      image.mv("server/uploads/" + image.name);
 
       pool.getConnection(function (err, connection) {
         const sql = `insert into links(url, namefile, link_role) values('/uploads/${image.name}', "${name}", "${role}");`;
