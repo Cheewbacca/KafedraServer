@@ -3,6 +3,7 @@ const path = require("path");
 const express = require("express");
 const cors = require("cors");
 const bodyParser = require("body-parser");
+const fileUpload = require("express-fileupload");
 
 // endpoints
 const getCurrentControlList = require("./endpoints/student/currentControlList");
@@ -21,6 +22,8 @@ const updateSessionScore = require("./endpoints/educator/updateSessionScore");
 const getCalendarList = require("./endpoints/educator/getCalendarList");
 const getCalendarDetailed = require("./endpoints/educator/getCalendarDetailed");
 const updateCalendar = require("./endpoints/educator/updateCalendar");
+const uploadFile = require("./endpoints/uploadFile");
+const getFiles = require("./endpoints/getFiles");
 
 // base settings
 const PORT = process.env.PORT || 80;
@@ -30,6 +33,13 @@ const app = express();
 app.listen(PORT, () => {
   console.log(`Server listening on ${PORT}`);
 });
+
+// enable files upload
+app.use(
+  fileUpload({
+    createParentPath: true,
+  })
+);
 
 app.use(function (req, res, next) {
   res.header("Access-Control-Allow-Origin", "*");
@@ -46,6 +56,7 @@ app.use(bodyParser.json());
 
 app.use(cors());
 
+app.use(express.static("uploads"));
 app.use(express.static(path.resolve(__dirname, "../../front/build")));
 
 // API
@@ -82,6 +93,10 @@ app.get("/educator/calendarList", getCalendarList);
 app.get("/educator/calendarDetailed", getCalendarDetailed);
 
 app.put("/educator/updateCalendar", updateCalendar);
+
+// files
+app.post("/fileUpload", uploadFile);
+app.get("/files", getFiles);
 
 // get front
 app.get("*", (_, res) => {
