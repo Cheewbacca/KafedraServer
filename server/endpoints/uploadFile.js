@@ -9,12 +9,12 @@ const uploadFile = async (req, res) => {
       });
     } else {
       const image = req.files.img;
-      const role = req.body.role;
+      const { role, name } = req.body;
 
       image.mv("uploads/" + image.name);
 
       pool.getConnection(function (err, connection) {
-        const sql = `insert into links(url, namefile, link_role) values('/uploads/${image.name}', "${image.name}", "${role}");`;
+        const sql = `insert into links(url, namefile, link_role) values('/uploads/${image.name}', "${name}", "${role}");`;
 
         connection.query(sql, function (error, result) {
           if (error) {
@@ -33,7 +33,7 @@ const uploadFile = async (req, res) => {
             status: true,
             message: "File is uploaded",
             data: {
-              name: image.name,
+              name,
               mimetype: image.mimetype,
               size: image.size,
             },
@@ -42,7 +42,6 @@ const uploadFile = async (req, res) => {
       });
     }
   } catch (err) {
-    console.log(err);
     res.status(500).send(err);
   }
 };
