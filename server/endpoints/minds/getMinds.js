@@ -1,8 +1,14 @@
-const pool = require("../mysql");
+const pool = require("../../mysql");
 
-const getAllFiles = (req, res) => {
+const getMinds = (req, res) => {
+  const { id } = req.query || {};
+
+  if (!id) {
+    return res.status(403).send(new Error("Some field is missing"));
+  }
+
   pool.getConnection(function (err, connection) {
-    const sql = `select * from links;`;
+    const sql = `select Id as id, date from idea where id_user=${id};`;
 
     connection.query(sql, function (error, results) {
       if (error) {
@@ -22,4 +28,4 @@ const getAllFiles = (req, res) => {
   });
 };
 
-module.exports = getAllFiles;
+module.exports = getMinds;

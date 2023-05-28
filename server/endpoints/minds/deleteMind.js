@@ -1,6 +1,6 @@
-const pool = require("../mysql");
+const pool = require("../../mysql");
 
-const deleteFile = (req, res) => {
+const deleteMind = (req, res) => {
   const { id } = req.query;
 
   if (!id) {
@@ -8,7 +8,7 @@ const deleteFile = (req, res) => {
   }
 
   pool.getConnection(function (err, connection) {
-    const sql = `DELETE FROM links WHERE id = ${id};`;
+    const sql = `DELETE FROM idea WHERE Id = ${id};`;
 
     connection.query(sql, function (error, result) {
       if (error) {
@@ -25,10 +25,10 @@ const deleteFile = (req, res) => {
 
       return res.status(200).send({
         status: true,
-        message: "File is deleted",
+        message: "Mind is deleted",
       });
     });
   });
 };
 
-module.exports = deleteFile;
+module.exports = deleteMind;
